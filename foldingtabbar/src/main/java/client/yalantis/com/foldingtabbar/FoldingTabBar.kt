@@ -53,6 +53,7 @@ class FoldingTabBar : LinearLayout {
     private var itemsPadding: Int = 0
     private var drawableResource: Int = 0
     private var selectionColor: Int = 0
+    private var selectable: Boolean = true
 
     constructor(context: Context) : this(context, null)
 
@@ -131,6 +132,9 @@ class FoldingTabBar : LinearLayout {
         }
         if (a.hasValue(R.styleable.FoldingTabBar_menu)) {
             inflateMenu(a.getResourceId(R.styleable.FoldingTabBar_menu, 0))
+        }
+        if (a.hasValue(R.styleable.FoldingTabBar_selectable)) {
+            selectable = a.getBoolean(R.styleable.FoldingTabBar_selectable, true)
         }
     }
 
@@ -324,11 +328,12 @@ class FoldingTabBar : LinearLayout {
             setOnClickListener {
                 onFoldingItemClickListener?.onFoldingItemSelected(menuItem) ?:
                         Log.e("FoldingTabBar", "FoldingItemClickListener is null")
-                menuItem.isChecked = true
-
-                selectedImageView?.isActivated = false
-                selectedImageView = this
-                selectedIndex = indexOfChild(this)
+                if (selectable) {
+                    menuItem.isChecked = true
+                    selectedImageView?.isActivated = false
+                    selectedImageView = this
+                    selectedIndex = indexOfChild(this)
+                }
                 animateMenu()
             }
 
@@ -337,6 +342,7 @@ class FoldingTabBar : LinearLayout {
     }
 
     fun select(position: Int) {
+        if (!selectable) return
         selectedImageView = (getChildAt(position) as SelectedMenuItem).apply {
             isActivated = true
         }
