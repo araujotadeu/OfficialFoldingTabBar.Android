@@ -322,7 +322,8 @@ class FoldingTabBar : LinearLayout {
             layoutParams = ViewGroup.LayoutParams(mSize, mSize)
             setPadding(itemsPadding, itemsPadding, itemsPadding, itemsPadding)
             visibility = View.GONE
-            isActivated = menuItem.isChecked
+            if (selectable)
+                isActivated = menuItem.isChecked
             addView(this, indexCounter)
 
             setOnClickListener {
