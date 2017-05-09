@@ -54,6 +54,7 @@ class FoldingTabBar : LinearLayout {
     private var drawableResource: Int = 0
     private var selectionColor: Int = 0
     private var selectable: Boolean = true
+    private var expanded: Boolean = false
 
     constructor(context: Context) : this(context, null)
 
@@ -368,10 +369,16 @@ class FoldingTabBar : LinearLayout {
      * externally
      */
     fun expand() {
+        if (expanded) {
+            return;
+        }
         mExpandingSet.start()
     }
 
     fun rollUp() {
+        if (!expanded) {
+            return;
+        }
         mRollupSet.start()
     }
 
@@ -386,6 +393,7 @@ class FoldingTabBar : LinearLayout {
      */
     private val rollUpListener = object : Animator.AnimatorListener {
         override fun onAnimationStart(animator: Animator) {
+            expanded = false;
             mData.forEach {
                 it.visibility = View.GONE
             }
@@ -410,6 +418,7 @@ class FoldingTabBar : LinearLayout {
     private val expandingListener = object : Animator.AnimatorListener {
 
         override fun onAnimationStart(animator: Animator) {
+            expanded = true;
             mData.forEach {
                 it.visibility = View.VISIBLE
             }
